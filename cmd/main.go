@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/turingXgo/http/app"
 	"github.com/turingXgo/http/db"
@@ -10,10 +11,16 @@ import (
 )
 
 func main() {
-	conn, err := db.NewConnection("demo", "postgres", "data")
+	var (
+		dbUser = os.Getenv("DB_USER")
+		dbPass = os.Getenv("DB_PASS")
+		dbName = os.Getenv("DB_NAME")
+	)
+	conn, err := db.NewConnection(dbUser, dbPass, dbName)
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("connected")
 	repo := postgres.New(conn)
 	application := app.NewApplication(repo)
 	http.HandleFunc("/user", application.GetUserByName)
