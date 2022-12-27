@@ -19,14 +19,12 @@ docker run --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgr
 ```
 - Connect to the postgres and create new database with `data` table:
 ```
-psql -h localhost -p 5432 -U demo -W
-create database data;
-\c data
-create table data (name text, age int);
+export POSTGRES_URL='postgres://demo:postgres@localhost:5432/data?sslmode=disable'
+migrate -database ${POSTGRES_URL} -path migrations up
 ```
 - Run application
 ```
-go run cmd/main.go
+make run
 ```
 - Send request
 - Profit 😎
